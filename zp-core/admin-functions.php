@@ -1179,7 +1179,7 @@ function printAdminHeader($tab, $subtab = NULL) {
 		<?php
 		if ($buttons) {
 			?>
-			<span class="buttons">
+			<span class="buttons edit_btns">
 				<?php
 				$parent = dirname($album->name);
 				if ($parent == '/' || $parent == '.' || empty($parent)) {
@@ -1188,30 +1188,30 @@ function printAdminHeader($tab, $subtab = NULL) {
 					$parent = '&amp;album=' . $parent . '&amp;tab=subalbuminfo';
 				}
 				?>
-				<a href="<?php echo WEBPATH . '/' . ZENFOLDER . '/admin-edit.php?page=edit' . $parent; ?>">
+				<a href="<?php echo WEBPATH . '/' . ZENFOLDER . '/admin-edit.php?page=edit' . $parent; ?>" class="edit_btn-back">
 					<img	src="images/arrow_left_blue_round.png" alt="" />
 					<strong><?php echo gettext("Back"); ?></strong>
 				</a>
-				<button type="submit">
+				<button type="submit" class="edit_btn-submit" >
 					<img	src="images/pass.png" alt="" />
 					<strong><?php echo gettext("Apply"); ?></strong>
 				</button>
-				<button type="reset" onclick="javascript:$('.deletemsg').hide();" >
+				<button type="reset" class="edit_btn-submit"  onclick="javascript:$('.deletemsg').hide();" >
 					<img	src="images/fail.png" alt="" />
 					<strong><?php echo gettext("Reset"); ?></strong>
 				</button>
-				<div class="floatright">
+				<div class="floatright edit_btns-sub">
 					<?php
 					if (!$album->isDynamic()) {
 						?>
-						<button type="button" title="<?php echo gettext('New subalbum'); ?>" onclick="javascript:newAlbum('<?php echo pathurlencode($album->name); ?>', true);">
+						<button type="button" title="<?php echo gettext('New subalbum'); ?>" class="edit_btn-new-subalbum" onclick="javascript:newAlbum('<?php echo pathurlencode($album->name); ?>', true);">
 							<img src="images/folder.png" alt="" />
 							<strong><?php echo gettext('New subalbum'); ?></strong>
 						</button>
 						<?php
 					}
 					?>
-					<a href="<?php echo WEBPATH . "/index.php?album=" . html_encode(pathurlencode($album->getFolder())); ?>">
+					<a href="<?php echo WEBPATH . "/index.php?album=" . html_encode(pathurlencode($album->getFolder())); ?>" class="edit_btn-view-album">
 						<img src="images/view.png" alt="" />
 						<strong><?php echo gettext('View Album'); ?></strong>
 					</a>
@@ -1221,13 +1221,13 @@ function printAdminHeader($tab, $subtab = NULL) {
 		}
 		?>
 		<br class="clearall" /><br />
-		<table class="formlayout">
+		<table class="formlayout edit_album">
 			<tr>
-				<td valign="top">
+				<td valign="top" class="edit_album_main">
 					<table class="width100percent">
-						<tr>
-							<td class="leftcolumn"><?php echo gettext("Owner"); ?></td>
-							<td class="middlecolumn">
+						<tr class="edit_owner">
+							<td class="leftcolumn edit_label"><?php echo gettext("Owner"); ?></td>
+							<td class="middlecolumn edit_input">
 								<?php
 								if (zp_loggedin(MANAGE_ALL_ALBUM_RIGHTS)) {
 									?>
@@ -1241,35 +1241,35 @@ function printAdminHeader($tab, $subtab = NULL) {
 								?>
 							</td>
 						</tr>
-						<tr>
-							<td class="leftcolumn">
+						<tr class="edit_title">
+							<td class="leftcolumn edit_label">
 								<?php echo gettext("Album Title"); ?>:
 							</td>
-							<td class="middlecolumn">
+							<td class="middlecolumn edit_input">
 								<?php print_language_string_list($album->getTitle('all'), $prefix . "albumtitle", false, null, '', '100%'); ?>
 							</td>
 						</tr>
 
-						<tr>
-							<td class="leftcolumn">
+						<tr class="edit_desc">
+							<td class="leftcolumn edit_label">
 								<?php echo gettext("Album Description:"); ?>
 							</td>
-							<td>
+							<td  class="edit_input">
 								<?php print_language_string_list($album->getDesc('all'), $prefix . "albumdesc", true, NULL, 'texteditor', '100%'); ?>
 							</td>
 						</tr>
 						<?php
 						if (GALLERY_SECURITY == 'public') {
 							?>
-							<tr class="password<?php echo $suffix; ?>extrashow">
-								<td class="leftcolumn">
+							<tr class="password<?php echo $suffix; ?>extrashow edit_album-password">
+								<td class="leftcolumn edit_label">
 									<p>
 										<a href="javascript:toggle_passwords('<?php echo $suffix; ?>',true);">
 											<?php echo gettext("Album password:"); ?>
 										</a>
 									</p>
 								</td>
-								<td class="middlecolumn">
+								<td class="middlecolumn edit_lock">
 									<?php
 									$x = $album->getPassword();
 									if (empty($x)) {
@@ -1285,8 +1285,8 @@ function printAdminHeader($tab, $subtab = NULL) {
 									?>
 								</td>
 							</tr>
-							<tr class="password<?php echo $suffix; ?>extrahide" style="display:none" >
-								<td class="leftcolumn">
+							<tr class="password<?php echo $suffix; ?>extrahide edit_album-password-user" style="display:none" >
+								<td class="leftcolumn edit_label">
 									<a href="javascript:toggle_passwords('<?php echo $suffix; ?>',false);">
 										<?php echo gettext("Album guest user:"); ?>
 									</a>
@@ -1296,7 +1296,7 @@ function printAdminHeader($tab, $subtab = NULL) {
 																onclick="passwordClear('<?php echo $suffix; ?>');
 					togglePassword('<?php echo $suffix; ?>');" /><?php echo gettext('Show password'); ?></label>
 								</td>
-								<td>
+								<td class="edit_input">
 									<input type="text" size="<?php echo TEXT_INPUT_SIZE; ?>"
 												 onkeydown="passwordClear
 					'<?php echo $suffix; ?>'
@@ -1305,8 +1305,8 @@ function printAdminHeader($tab, $subtab = NULL) {
 												 value="<?php echo $album->getUser(); ?>" />
 								</td>
 							</tr>
-							<tr class="password<?php echo $suffix; ?>extrahide" style="display:none" >
-								<td class="leftcolumn">
+							<tr class="password<?php echo $suffix; ?>extrahide edit_album-password-pw" style="display:none" >
+								<td class="leftcolumn edit_label">
 									<p>
 										<span id="strength<?php echo $suffix; ?>"><?php echo gettext("Album password:"); ?></span>
 										<br />
@@ -1318,7 +1318,7 @@ function printAdminHeader($tab, $subtab = NULL) {
 										<?php echo gettext("Password hint:"); ?>
 									</p>
 								</td>
-								<td>
+								<td class="input">
 									<p>
 										<input type="password"
 													 id="pass<?php echo $suffix; ?>" name="pass<?php echo $suffix; ?>"
@@ -1352,9 +1352,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 						?>
 
 
-						<tr>
-							<td class="leftcolumn"><?php echo gettext("Date:"); ?> </td>
-							<td>
+						<tr class="edit_date">
+							<td class="leftcolumn edit_label"><?php echo gettext("Date:"); ?> </td>
+							<td class="edit_input">
 								<script type="text/javascript">
 			// <!-- <![CDATA[
 			$(function() {
@@ -1370,9 +1370,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 								<input type="text" id="datepicker<?php echo $suffix; ?>" size="20" name="<?php echo $prefix; ?>albumdate" value="<?php echo $d; ?>" />
 							</td>
 						</tr>
-						<tr>
-							<td class="leftcolumn"><?php echo gettext("Location:"); ?> </td>
-							<td class="middlecolumn">
+						<tr class="edit_location">
+							<td class="leftcolumn edit_label"><?php echo gettext("Location:"); ?> </td>
+							<td class="middlecolumn edit_input">
 								<?php print_language_string_list($album->getLocation(), $prefix . "albumlocation", false, NULL, 'hint', '100%'); ?>
 							</td>
 						</tr>
@@ -1380,9 +1380,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 						$custom = zp_apply_filter('edit_album_custom_data', '', $album, $prefix);
 						if (empty($custom)) {
 							?>
-							<tr>
-								<td class="leftcolumn"><?php echo gettext("Custom data:"); ?></td>
-								<td><?php print_language_string_list($album->getCustomData('all'), $prefix . "album_custom_data", true, NULL, 'texteditor_albumcustomdata', '100%'); ?></td>
+							<tr class="edit_custom-data">
+								<td class="leftcolumn edit_label"><?php echo gettext("Custom data:"); ?></td>
+								<td class="edit_input"><?php print_language_string_list($album->getCustomData('all'), $prefix . "album_custom_data", true, NULL, 'texteditor_albumcustomdata', '100%'); ?></td>
 							</tr>
 							<?php
 						} else {
@@ -1398,9 +1398,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 						  $sort[gettext('Random')] = 'random';
 						 */
 						?>
-						<tr>
-							<td class="leftcolumn"><?php echo gettext("Sort subalbums by:"); ?> </td>
-							<td>
+						<tr class="edit_sort-subalbums">
+							<td class="leftcolumn edit_label"><?php echo gettext("Sort subalbums by:"); ?> </td>
+							<td class="edit_input">
 								<span class="nowrap">
 									<select id="albumsortselect<?php echo $prefix; ?>" name="<?php echo $prefix; ?>subalbumsortby" onchange="update_direction(this, 'album_direction_div<?php echo $suffix; ?>', 'album_custom_div<?php echo $suffix; ?>');">
 										<?php
@@ -1451,9 +1451,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 							</td>
 						</tr>
 
-						<tr>
-							<td class="leftcolumn"><?php echo gettext("Sort images by:"); ?> </td>
-							<td>
+						<tr class="edit_sort-images">
+							<td class="leftcolumn edit_label"><?php echo gettext("Sort images by:"); ?> </td>
+							<td class="edit_input">
 								<span class="nowrap">
 									<select id="imagesortselect<?php echo $prefix; ?>" name="<?php echo $prefix; ?>sortby" onchange="update_direction(this, 'image_direction_div<?php echo $suffix; ?>', 'image_custom_div<?php echo $suffix; ?>')">
 										<?php
@@ -1510,9 +1510,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 						<?php
 						if (is_null($album->getParent())) {
 							?>
-							<tr>
-								<td class="leftcolumn"><?php echo gettext("Album theme:"); ?> </td>
-								<td>
+							<tr class="edit_theme-select">
+								<td class="leftcolumn edit_label"><?php echo gettext("Album theme:"); ?> </td>
+								<td class="edit_input">
 									<select id="album_theme" class="album_theme" name="<?php echo $prefix; ?>album_theme"	<?php if (!zp_loggedin(THEMES_RIGHTS)) echo 'disabled="disabled" '; ?>	>
 										<?php
 										$themes = $_zp_gallery->getThemes();
@@ -1543,9 +1543,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 						}
 						if (!$album->isDynamic()) {
 							?>
-							<tr>
-								<td class="leftcolumn"><?php echo gettext("Album watermarks:"); ?> </td>
-								<td>
+							<tr class="edit_watermark">
+								<td class="leftcolumn edit_label"><?php echo gettext("Album watermarks:"); ?> </td>
+								<td class="edit_input">
 									<?php $current = $album->getWatermark(); ?>
 									<select id="album_watermark<?php echo $suffix; ?>" name="<?php echo $prefix; ?>album_watermark">
 										<option value="<?php echo NO_WATERMARK; ?>" <?php if ($current == NO_WATERMARK) echo ' selected="selected"' ?> style="background-color:LightGray"><?php echo gettext('*no watermark'); ?></option>
@@ -1558,9 +1558,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 									<em><?php echo gettext('Images'); ?></em>
 								</td>
 							</tr>
-							<tr>
-								<td class="leftcolumn"></td>
-								<td>
+							<tr class="edit_watermark-thumbs">
+								<td class="leftcolumn edit_label"></td>
+								<td class="edit_input">
 									<?php $current = $album->getWatermarkThumb(); ?>
 									<select id="album_watermark_thumb<?php echo $suffix; ?>" name="<?php echo $prefix; ?>album_watermark_thumb">
 										<option value="<?php echo NO_WATERMARK; ?>" <?php if ($current == NO_WATERMARK) echo ' selected="selected"' ?> style="background-color:LightGray"><?php echo gettext('*no watermark'); ?></option>
@@ -1588,9 +1588,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 								}
 							}
 							?>
-							<tr>
-								<td class="leftcolumn"><?php echo gettext("Thumbnail:"); ?> </td>
-								<td>
+							<tr class="edit_sort-thumbs">
+								<td class="leftcolumn edit_label"><?php echo gettext("Thumbnail:"); ?> </td>
+								<td class="edit_input">
 									<?php
 									if ($showThumb) {
 										?>
@@ -1671,9 +1671,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 							<?php
 						}
 						?>
-						<tr valign="top">
-							<td class="leftcolumn topalign-nopadding"><br /><?php echo gettext("Codeblocks:"); ?></td>
-							<td>
+						<tr valign="top" class="edit_codeblocks">
+							<td class="leftcolumn topalign-nopadding edit_label"><br /><?php echo gettext("Codeblocks:"); ?></td>
+							<td class="edit_input">
 								<br />
 								<?php printCodeblockEdit($album, (int) $suffix); ?>
 							</td>
@@ -1681,14 +1681,14 @@ function printAdminHeader($tab, $subtab = NULL) {
 					</table>
 				</td>
 				<?php $bglevels = array('#fff', '#f8f8f8', '#efefef', '#e8e8e8', '#dfdfdf', '#d8d8d8', '#cfcfcf', '#c8c8c8'); ?>
-				<td class="rightcolumn" valign="top">
-					<h2 class="h2_bordered_edit"><?php echo gettext("General"); ?></h2>
-					<div class="box-edit">
-						<label class="checkboxlabel">
+				<td class="rightcolumn edit_album-sidebar" valign="top">
+					<h2 class="h2_bordered_edit edit_box-general"><?php echo gettext("General"); ?></h2>
+					<div class="box-edit edit_box-general">
+						<label class="checkboxlabel edit_published">
 							<input type="checkbox" name="<?php echo $prefix; ?>Published" value="1" <?php if ($album->getShow()) echo ' checked="checked"'; ?> />
 							<?php echo gettext("Published"); ?>
 						</label>
-						<label class="checkboxlabel">
+						<label class="checkboxlabel edit_allow-comments">
 							<input type="checkbox" name="<?php echo $prefix . 'allowcomments'; ?>" value="1" <?php
 							if ($album->getCommentsAllowed()) {
 								echo ' checked="checked"';
@@ -1703,7 +1703,7 @@ function printAdminHeader($tab, $subtab = NULL) {
 								$hc = '0';
 							}
 							?>
-							<label class="checkboxlabel">
+							<label class="checkboxlabel edit_reset-hitcounter">
 								<input type="checkbox" name="reset_hitcounter<?php echo $prefix; ?>"<?php if (!$hc) echo ' disabled="disabled"'; ?> />
 								<?php echo sprintf(ngettext("Reset hit counter (%u hit)", "Reset hit counter (%u hits)", $hc), $hc); ?>
 							</label>
@@ -1765,7 +1765,7 @@ function printAdminHeader($tab, $subtab = NULL) {
 						</script>
 						<br class="clearall" />
 						<hr />
-						<p>
+						<p class="edit_date-schedule">
 							<label for="<?php echo $prefix; ?>publishdate"><?php echo gettext('Publish date'); ?> <small>(YYYY-MM-DD)</small></label>
 							<br /><input value="<?php echo $publishdate; ?>" type="text" size="20" maxlength="30" name="publishdate-<?php echo $prefix; ?>" id="<?php echo $prefix; ?>publishdate" />
 							<strong class="scheduledpublishing-<?php echo $prefix; ?>" style="color:red">
@@ -1789,28 +1789,28 @@ function printAdminHeader($tab, $subtab = NULL) {
 					</div>
 					<!-- **************** Move/Copy/Rename ****************** -->
 					<?php ?>
-					<h2 class="h2_bordered_edit"><?php echo gettext("Utilities"); ?></h2>
-					<div class="box-edit">
+					<h2 class="h2_bordered_edit edit_box-utilities"><?php echo gettext("Utilities"); ?></h2>
+					<div class="box-edit edit_box-utilities">
 
-						<label class="checkboxlabel">
+						<label class="checkboxlabel edit_move">
 							<input type="radio" id="a-<?php echo $prefix; ?>move" name="a-<?php echo $prefix; ?>MoveCopyRename" value="move"
 										 onclick="toggleAlbumMCR('<?php echo $prefix; ?>', 'move');"<?php echo $isPrimaryAlbum; ?> />
 										 <?php echo gettext("Move"); ?>
 						</label>
 
-						<label class="checkboxlabel">
+						<label class="checkboxlabel edit_copy">
 							<input type="radio" id="a-<?php echo $prefix; ?>copy" name="a-<?php echo $prefix; ?>MoveCopyRename" value="copy"
 										 onclick="toggleAlbumMCR('<?php echo $prefix; ?>', 'copy');"/>
 										 <?php echo gettext("Copy"); ?>
 						</label>
 
-						<label class="checkboxlabel">
+						<label class="checkboxlabel edit_rename">
 							<input type="radio" id="a-<?php echo $prefix; ?>rename" name="a-<?php echo $prefix; ?>MoveCopyRename" value="rename"
 										 onclick="toggleAlbumMCR('<?php echo $prefix; ?>', 'rename');" <?php echo $isPrimaryAlbum; ?> />
 										 <?php echo gettext("Rename Folder"); ?>
 						</label>
 
-						<label class="checkboxlabel">
+						<label class="checkboxlabel edit_delete">
 							<input type="radio" id="Delete-<?php echo $prefix; ?>" name="a-<?php echo $prefix; ?>MoveCopyRename" value="delete"
 										 onclick="toggleAlbumMCR('<?php echo $prefix; ?>', '');
 				deleteConfirm('Delete-<?php echo $prefix; ?>', '<?php echo $prefix; ?>', deleteAlbum1);" <?php echo $isPrimaryAlbum; ?> />
@@ -1877,8 +1877,8 @@ function printAdminHeader($tab, $subtab = NULL) {
 						?>
 						<span class="clearall" ></span>
 					</div>
-					<h2 class="h2_bordered_edit"><?php echo gettext("Tags"); ?></h2>
-					<div class="box-edit-unpadded">
+					<h2 class="h2_bordered_edit edit_box-tags"><?php echo gettext("Tags"); ?></h2>
+					<div class="box-edit-unpadded edit_box-tags">
 						<?php
 						$tagsort = getTagOrder();
 						tagSelector($album, 'tags_' . $prefix, false, $tagsort, true, true);
@@ -1891,9 +1891,9 @@ function printAdminHeader($tab, $subtab = NULL) {
 		if ($album->isDynamic()) {
 			?>
 			<table>
-				<tr>
-					<td align="left" valign="top" width="150"><?php echo gettext("Dynamic album search:"); ?></td>
-					<td>
+				<tr class="edit_dynamic">
+					<td align="left" valign="top" width="150" class="edit_label"><?php echo gettext("Dynamic album search:"); ?></td>
+					<td class="edit_input">
 						<table class="noinput">
 							<tr>
 								<td><?php echo html_encode(urldecode($album->getSearchParams())); ?></td>
@@ -1910,31 +1910,31 @@ function printAdminHeader($tab, $subtab = NULL) {
 		<?php
 		if ($buttons) {
 			?>
-			<span class="buttons">
-				<a href="<?php echo WEBPATH . '/' . ZENFOLDER . '/admin-edit.php?page=edit' . $parent; ?>">
+			<span class="buttons edit_btns">
+				<a href="<?php echo WEBPATH . '/' . ZENFOLDER . '/admin-edit.php?page=edit' . $parent; ?>" class="edit_btn-back">
 					<img	src="images/arrow_left_blue_round.png" alt="" />
 					<strong><?php echo gettext("Back"); ?></strong>
 				</a>
-				<button type="submit">
+				<button type="submit" class="edit_btn-submit">
 					<img	src="images/pass.png" alt="" />
 					<strong><?php echo gettext("Apply"); ?></strong>
 				</button>
-				<button type="reset" onclick="javascript:$('.deletemsg').hide();">
+				<button type="reset" class="edit_btn-reset" onclick="javascript:$('.deletemsg').hide();">
 					<img	src="images/fail.png" alt="" />
 					<strong><?php echo gettext("Reset"); ?></strong>
 				</button>
-				<div class="floatright">
+				<div class="floatright edit_btns-sub">
 					<?php
 					if (!$album->isDynamic()) {
 						?>
-						<button type="button" title="<?php echo gettext('New subalbum'); ?>" onclick="javascript:newAlbum('<?php echo pathurlencode($album->name); ?>', true);">
+						<button type="button" title="<?php echo gettext('New subalbum'); ?>" class="edit_btn-new-subalbum" onclick="javascript:newAlbum('<?php echo pathurlencode($album->name); ?>', true);">
 							<img src="images/folder.png" alt="" />
 							<strong><?php echo gettext('New subalbum'); ?></strong>
 						</button>
 						<?php
 					}
 					?>
-					<a href="<?php echo WEBPATH . "/index.php?album=" . html_encode(pathurlencode($album->getFolder())); ?>">
+					<a href="<?php echo WEBPATH . "/index.php?album=" . html_encode(pathurlencode($album->getFolder())); ?>" class="edit_btn-view-album">
 						<img src="images/view.png" alt="" />
 						<strong><?php echo gettext('View Album'); ?></strong>
 					</a>
